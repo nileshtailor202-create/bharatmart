@@ -16,7 +16,7 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,collection,getDocs,addDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyA4qSg3C3G3CpsPJrwnMxpCSuPtQ-5cBbk",authDomain:"bharatmart-26a2f.firebaseapp.com",projectId:"bharatmart-26a2f",storageBucket:"bharatmart-26a2f.firebasestorage.app",messagingSenderId:"858559088379",appId:"1:858559088379:web:66ee91a3b6a2f97659d25e"};
+const firebaseConfig={apiKey:"AIzaSyA4qAhS3ag3CpsPJrwnMxpCSuPtQ-5cBbk",authDomain:"bharatmart-26a2f.firebaseapp.com",projectId:"bharatmart-26a2f",storageBucket:"bharatmart-26a2f.firebasestorage.app",messagingSenderId:"858559088379",appId:"1:858559088379:web:66ee91a3b6a2f97659d25e"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
 const demo=[{id:"d1",name:"Android स्मार्टफोन",category:"मोबाइल",price:8999,oldPrice:10999,emoji:"📱"},{id:"d2",name:"वायरलेस हेडफोन",category:"इलेक्ट्रॉनिक्स",price:1299,oldPrice:1999,emoji:"🎧"},{id:"d3",name:"पुरुषों की टी-शर्ट",category:"फैशन",price:399,oldPrice:699,emoji:"👕"},{id:"d4",name:"महिलाओं का हैंडबैग",category:"फैशन",price:799,oldPrice:1299,emoji:"👜"},{id:"d5",name:"मिक्सर ग्राइंडर",category:"घर",price:2199,oldPrice:2999,emoji:"🥣"},{id:"d6",name:"स्पोर्ट्स शूज़",category:"फैशन",price:999,oldPrice:1599,emoji:"👟"}];
 let products=[...demo],cat="सभी",cart=[],wish=[];const ru=n=>"₹"+Number(n||0).toLocaleString("en-IN");
