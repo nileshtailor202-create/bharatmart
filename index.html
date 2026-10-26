@@ -1,36 +1,733 @@
-<!doctype html>
-<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BharatMart</title>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2874f0">
+<title>BharatMart | Smart Shopping</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#f2f5fb;color:#172033}header{background:#1558c0;color:white;padding:14px;position:sticky;top:0;z-index:2}.top{max-width:1100px;margin:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.brand{font-size:24px;font-weight:900}.search{display:flex;flex:1;min-width:180px}.search input{padding:12px;border:0;border-radius:8px 0 0 8px;min-width:0;flex:1;font-size:16px}.search button,.primary{border:0;background:#ffd814;padding:10px;border-radius:8px;font-weight:bold}.headbtn{padding:10px;border-radius:8px;border:1px solid #ffffff88;background:transparent;color:white}nav{background:#0d3f91;padding:10px;display:flex;gap:8px;overflow:auto}nav button{border:0;border-radius:20px;padding:9px 14px;white-space:nowrap}main{max-width:1100px;margin:auto;padding:14px}.hero{background:linear-gradient(110deg,#dceaff,#fff0bd);padding:24px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}.hero h1{font-size:clamp(24px,5vw,40px);margin:0 0 8px}.hero span{font-size:60px}.toolbar,.adminbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.toolbar select,.field input,.field textarea{padding:10px;border-radius:8px;border:1px solid #bbc7d9}.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px #0001}.pic{height:140px;display:grid;place-items:center;background:#f8faff;overflow:hidden}.pic img{width:100%;height:100%;object-fit:contain}.body{padding:12px}.body h3{font-size:15px;min-height:38px;margin:0 0 8px}.price{font-weight:850;font-size:19px}.old{font-size:12px;text-decoration:line-through;color:#65728a;margin-left:5px}.buy{width:100%;padding:10px;border:0;border-radius:20px;background:#ffd814;font-weight:bold}.wish{float:right;border:0;border-radius:50%;padding:6px}.notice,.panel{background:white;padding:16px;border-radius:12px;margin-top:18px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:4px}.field input,.field textarea{width:100%;font:inherit}.field textarea{min-height:70px}.full{grid-column:1/-1}.status{padding:10px;border-radius:8px;background:#eef4ff;margin:10px 0;overflow-wrap:anywhere}.smallbtn{border:1px solid #ccd4e2;background:white;padding:8px 10px;border-radius:8px}.hidden{display:none!important}footer{text-align:center;color:#65728a;padding:20px}.overlay{display:none;position:fixed;inset:0;background:#0007;z-index:10}.drawer{margin-left:auto;background:white;width:min(420px,95vw);height:100%;padding:18px;overflow:auto}.row{padding:12px 0;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;gap:8px}@media(max-width:750px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:520px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.pic{height:105px}.hero{padding:16px}.hero span{font-size:42px}main{padding:10px}.formgrid{grid-template-columns:1fr}}
-</style></head><body>
-<header><div class="top"><div><div class="brand">🇮🇳 BharatMart</div><small>भारत की अपनी ऑनलाइन दुकान</small></div><div class="search"><input id="q" placeholder="उत्पाद खोजें…"><button id="searchBtn">खोजें</button></div><button class="headbtn" id="wishBtn">♡ पसंद</button><button class="headbtn" id="cartBtn">🛒 कार्ट <b id="count">0</b></button></div></header>
-<nav id="nav"></nav><main><section class="hero"><div><h1>हर खरीदारी, एक ही जगह</h1><p>मोबाइल, फैशन, घर और रोज़मर्रा के उत्पाद</p><button class="primary" id="shopBtn">खरीदारी शुरू करें</button></div><span>🛍️📦</span></section>
-<div class="toolbar"><h2 id="title">लोकप्रिय उत्पाद</h2><select id="sort"><option value="popular">लोकप्रिय पहले</option><option value="low">कीमत कम से ज़्यादा</option><option value="high">कीमत ज़्यादा से कम</option></select></div><div id="products" class="products"></div>
-<section class="panel" id="adminPanel"><div class="adminbar"><h2>🔐 Admin Panel</h2><b id="authLabel">लॉगिन नहीं है</b></div><p>केवल Admin लॉगिन करके प्रोडक्ट जोड़ सकता है।</p>
-<div class="formgrid" id="loginArea"><div class="field"><label for="email">Admin ईमेल</label><input id="email" type="email" autocomplete="username" placeholder="आपका ईमेल"></div><div class="field"><label for="password">पासवर्ड</label><input id="password" type="password" autocomplete="current-password" placeholder="पासवर्ड"></div><div class="full"><button class="primary" id="loginBtn">Admin Login</button> <button class="smallbtn hidden" id="logoutBtn">Logout</button></div></div>
-<div id="adminArea" class="hidden"><div class="status">लॉगिन सफल। प्रोडक्ट की जानकारी भरकर Save करें।</div><div class="formgrid">
-<div class="field"><label for="pname">प्रोडक्ट का नाम *</label><input id="pname" placeholder="Cotton T-Shirt"></div><div class="field"><label for="price">कीमत (₹) *</label><input id="price" type="number" min="0" step="1" placeholder="499"></div><div class="field"><label for="oldPrice">पुरानी कीमत (₹)</label><input id="oldPrice" type="number" min="0" step="1" placeholder="699"></div><div class="field"><label for="category">कैटेगरी *</label><input id="category" placeholder="Fashion"></div><div class="field"><label for="imageUrl">फोटो का URL</label><input id="imageUrl" type="url" placeholder="https://..."></div><div class="field"><label for="stock">स्टॉक</label><input id="stock" type="number" min="0" step="1" value="10"></div><div class="field full"><label for="description">विवरण</label><textarea id="description" placeholder="प्रोडक्ट की जानकारी"></textarea></div><div class="full"><button class="primary" id="saveBtn">प्रोडक्ट Save करें</button> <button class="smallbtn" id="refreshBtn">Refresh</button></div></div></div><div id="status" class="status">Firebase स्थिति यहाँ दिखेगी।</div></section>
-<section class="notice"><h3>महत्वपूर्ण जानकारी</h3><p>यह शुरुआती स्टोर है। असली checkout, payment, order tracking, seller login और seller payouts अभी उपलब्ध नहीं हैं। Firestore Rules सुरक्षित रखना ज़रूरी है।</p></section></main><footer>© BharatMart — Starter Store</footer>
-<div class="overlay" id="overlay"><div class="drawer"><button id="closeDrawer" class="smallbtn">बंद करें ✕</button><div id="drawerContent"></div></div></div>
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,getDocs,addDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig={apiKey: "AIzaSyA4qAhS3ag3CpsPJrwnMxpCSuPtQ-5cBbk",:"bharatmart-26a2f.firebaseapp.com",projectId:"bharatmart-26a2f",storageBucket:"bharatmart-26a2f.firebasestorage.app",messagingSenderId:"858559088379",appId:"1:858559088379:web:66ee91a3b6a2f97659d25e"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
-const demo=[{id:"d1",name:"Android स्मार्टफोन",category:"मोबाइल",price:8999,oldPrice:10999,emoji:"📱"},{id:"d2",name:"वायरलेस हेडफोन",category:"इलेक्ट्रॉनिक्स",price:1299,oldPrice:1999,emoji:"🎧"},{id:"d3",name:"पुरुषों की टी-शर्ट",category:"फैशन",price:399,oldPrice:699,emoji:"👕"},{id:"d4",name:"महिलाओं का हैंडबैग",category:"फैशन",price:799,oldPrice:1299,emoji:"👜"},{id:"d5",name:"मिक्सर ग्राइंडर",category:"घर",price:2199,oldPrice:2999,emoji:"🥣"},{id:"d6",name:"स्पोर्ट्स शूज़",category:"फैशन",price:999,oldPrice:1599,emoji:"👟"}];
-let products=[...demo],cat="सभी",cart=[],wish=[];const ru=n=>"₹"+Number(n||0).toLocaleString("en-IN");
-function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function status(s){$("status").textContent=s;}
-function makeNav(){let cs=["सभी",...new Set(products.map(p=>p.category).filter(Boolean))];$("nav").innerHTML=cs.map(c=>`<button data-cat="${esc(c)}">${esc(c)}</button>`).join("");$("nav").querySelectorAll("button").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;render()});}
-function render(){let q=$("q").value.trim().toLowerCase(),s=$("sort").value,a=products.filter(p=>(cat==="सभी"||p.category===cat)&&(`${p.name||""} ${p.category||""} ${p.description||""}`).toLowerCase().includes(q));if(s==="low")a.sort((x,y)=>x.price-y.price);if(s==="high")a.sort((x,y)=>y.price-x.price);$("products").innerHTML=a.length?a.map(p=>`<article class="card"><div class="pic">${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}">`:`<span style="font-size:58px">${esc(p.emoji||"📦")}</span>`}</div><div class="body"><button class="wish" data-wish="${esc(p.id)}">${wish.includes(p.id)?"♥":"♡"}</button><h3>${esc(p.name)}</h3><div class="price">${ru(p.price)}${p.oldPrice?`<span class="old">${ru(p.oldPrice)}</span>`:""}</div><p>स्टॉक: ${Number(p.stock??"—")===Number(p.stock??"—")?esc(p.stock??"उपलब्धता जाँचें"):"उपलब्धता जाँचें"}</p><button class="buy" data-add="${esc(p.id)}">कार्ट में डालें</button></div></article>`).join(""):"<p>कोई उत्पाद नहीं मिला।</p>";$("products").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>add(b.dataset.add));$("products").querySelectorAll("[data-wish]").forEach(b=>b.onclick=()=>{let id=b.dataset.wish;wish=wish.includes(id)?wish.filter(x=>x!==id):[...wish,id];render()});$("count").textContent=cart.reduce((n,x)=>n+x.qty,0);}
-async function load(){try{let snap=await getDocs(collection(db,"products")),data=snap.docs.map(d=>({id:d.id,...d.data()}));products=[...data,...demo];makeNav();render();status(data.length?`Firebase से ${data.length} प्रोडक्ट लोड हुए।`: "Firestore पढ़ा गया, लेकिन products खाली हैं या पढ़ने की अनुमति नहीं है। डेमो प्रोडक्ट दिख रहे हैं।");}catch(e){products=[...demo];makeNav();render();status("Firestore डेटा नहीं पढ़ सके: "+e.message+"। Rules/config जाँचें।");}}
-function add(id){let p=products.find(x=>x.id===id);if(!p)return;let x=cart.find(x=>x.id===id);x?x.qty++:cart.push({id,qty:1});render();drawer("cart");}
-function drawer(t){$("overlay").style.display="block";if(t==="cart"){let total=0;$("drawerContent").innerHTML="<h2>आपका कार्ट</h2>"+(cart.length?cart.map(x=>{let p=products.find(p=>p.id===x.id);total+=Number(p.price)*x.qty;return `<div class="row">${esc(p.name)} × ${x.qty}<b>${ru(p.price*x.qty)}</b></div>`}).join("")+`<h3>कुल: ${ru(total)}</h3><p>Checkout अभी डेमो है।</p>`:"<p>कार्ट खाली है।</p>");}else{$("drawerContent").innerHTML="<h2>पसंदीदा उत्पाद</h2>"+products.filter(p=>wish.includes(p.id)).map(p=>`<div class="row">${esc(p.name)} <b>${ru(p.price)}</b></div>`).join("");}}
-$("searchBtn").onclick=render;$("q").onkeydown=e=>{if(e.key==="Enter")render()};$("sort").onchange=render;$("shopBtn").onclick=()=>$("title").scrollIntoView({behavior:"smooth"});$("cartBtn").onclick=()=>drawer("cart");$("wishBtn").onclick=()=>drawer("wish");$("closeDrawer").onclick=()=>$("overlay").style.display="none";$("overlay").onclick=e=>{if(e.target===$("overlay"))$("overlay").style.display="none"};
-$("loginBtn").onclick=async()=>{try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);$("password").value="";status("Login सफल। Firestore Rules में Admin UID की अनुमति होना ज़रूरी है।");}catch(e){status("Login असफल: "+e.message);}};
-$("logoutBtn").onclick=()=>signOut(auth);
-onAuthStateChanged(auth,u=>{$("authLabel").textContent=u?"लॉगिन: "+u.email:"लॉगिन नहीं है";$("loginBtn").classList.toggle("hidden",!!u);$("logoutBtn").classList.toggle("hidden",!u);$("adminArea").classList.toggle("hidden",!u);});
-$("saveBtn").onclick=async()=>{let u=auth.currentUser;if(!u){status("पहले Admin Login करें।");return;}let name=$("pname").value.trim(),price=Number($("price").value),category=$("category").value.trim();if(!name||$("price").value===""||price<0||!category){status("नाम, सही कीमत और कैटेगरी भरें।");return;}let item={name,price,oldPrice:Number($("oldPrice").value)||0,category,imageUrl:$("imageUrl").value.trim(),stock:Math.max(0,Number($("stock").value)||0),description:$("description").value.trim(),createdAt:serverTimestamp(),createdBy:u.uid};try{await addDoc(collection(db,"products"),item);status("प्रोडक्ट Firebase में सेव हो गया।");["pname","price","oldPrice","category","imageUrl","description"].forEach(id=>$(id).value="");$("stock").value="10";await load();}catch(e){status("Save नहीं हुआ: "+e.message+"। Firestore Rules में Admin UID अनुमति चाहिए।");}};
-$("refreshBtn").onclick=load;makeNav();render();load();
-</script></body></html>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f3f6;color:#172337}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:100;background:#2874f0;color:white;padding:12px;box-shadow:0 3px 12px #0002}
+.header{max-width:1200px;margin:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:white;text-decoration:none}
+.logo span{color:#ffe500}
+.search{flex:1;min-width:180px}
+.search input{width:100%;padding:12px;border:0;border-radius:6px}
+.nav-btn{background:transparent;color:white;border:0;padding:8px;font-weight:bold}
+.badge{background:#ffe500;color:#172337;padding:3px 7px;border-radius:20px}
+main{max-width:1200px;margin:auto;padding:14px}
+.categories{background:white;display:flex;justify-content:space-around;gap:12px;overflow-x:auto;padding:15px;border-radius:8px;margin-bottom:15px}
+.category{min-width:75px;text-align:center;cursor:pointer;font-size:13px;font-weight:bold;transition:.2s}
+.category:hover{transform:translateY(-4px)}
+.category-icon{width:48px;height:48px;background:#edf4ff;border-radius:50%;display:grid;place-items:center;font-size:25px;margin:auto auto 7px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#1557bd,#2874f0,#73b1ff);color:white;padding:35px;min-height:250px;border-radius:10px;display:flex;align-items:center}
+.hero-content{position:relative;z-index:2;animation:slideUp .7s ease}
+.hero h1{font-size:clamp(30px,5vw,48px);margin:12px 0}
+.hero p{line-height:1.6}
+.hero-art{position:absolute;right:8%;font-size:clamp(70px,12vw,130px);animation:float 3s ease-in-out infinite}
+.primary{background:#ffe500;color:#172337;border:0;border-radius:6px;padding:12px 16px;font-weight:bold;transition:.2s}
+.primary:hover{transform:translateY(-3px)}
+.secondary{background:#eaf1ff;color:#1557bd;border:0;padding:10px 14px;border-radius:6px;font-weight:bold}
+.danger{background:#fff0f0;color:#b42318;border:0;padding:10px 14px;border-radius:6px}
+.section,.panel{background:white;margin-top:16px;border-radius:8px;overflow:hidden;box-shadow:0 4px 15px #00000008}
+.section-title{padding:16px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.section-title h2{margin:0;font-size:20px}
+.category-buttons{display:flex;gap:8px;padding:14px;overflow-x:auto}
+.chip{border:1px solid #ddd;border-radius:30px;padding:9px 15px;background:white;white-space:nowrap}
+.chip.active,.chip:hover{background:#2874f0;color:white;border-color:#2874f0}
+.product-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:14px}
+.product{border:1px solid #eee;border-radius:8px;overflow:hidden;background:white;animation:fadeIn .5s ease;transition:.2s}
+.product:hover{transform:translateY(-5px);box-shadow:0 8px 22px #0002}
+.product-image{height:145px;display:grid;place-items:center;background:#f3f7ff;font-size:60px;overflow:hidden}
+.product-image img{width:100%;height:100%;object-fit:cover}
+.product-info{padding:11px}
+.product-info h3{font-size:14px;min-height:34px;margin:5px 0}
+.price{font-size:19px;font-weight:bold;margin:8px 0}
+.old-price{font-size:12px;color:#888;text-decoration:line-through;font-weight:normal}
+.discount{color:#16834a;font-size:12px;font-weight:bold}
+.product-actions{display:flex;gap:5px;margin-top:10px}
+.product-actions button{flex:1;padding:9px 4px;font-size:12px}
+.heart{border:1px solid #f3d6dd;border-radius:5px;background:#fff5f7;color:#d92d55}
+.panel{padding:18px}
+.panel h2{margin-top:0}
+.field{margin:12px 0}
+.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:11px;border:1px solid #ddd;border-radius:6px}
+.field textarea{min-height:75px}
+.hidden{display:none!important}
+.notice{background:#edf4ff;color:#1557bd;padding:12px;border-radius:6px;margin:12px 0;overflow-wrap:anywhere}
+.empty{text-align:center;padding:30px;color:#667085}
+.row{padding:13px 0;border-bottom:1px solid #eee;overflow-wrap:anywhere}
+footer{margin-top:20px;background:#172337;color:white;padding:28px 18px;text-align:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#172337;color:white;padding:12px 18px;border-radius:8px;z-index:300;display:none;max-width:90%}
+.toast.show{display:block;animation:slideUp .2s ease}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-13px) rotate(3deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:900px){.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){
+main{padding:9px}.header{gap:7px}.logo{font-size:22px}.search{order:5;flex-basis:100%}
+.nav-btn{font-size:12px}.hero{padding:23px 17px;min-height:220px}.hero-art{right:0;font-size:65px;opacity:.65}
+.hero-content{max-width:85%}.hero h1{font-size:29px}
+.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:9px}
+.product-image{height:120px;font-size:50px}
+}
+</style>
+</head>
+
+<body>
+<header>
+<div class="header">
+<a class="logo" href="#">Bharat<span>Mart</span></a>
+<div class="search"><input id="searchInput" type="search" placeholder="Products aur categories khojein..."></div>
+<button class="nav-btn" onclick="openAccount()">👤 Account</button>
+<button class="nav-btn" onclick="showWishlist()">❤️ Wishlist</button>
+<button class="nav-btn" onclick="showCart()">🛒 Cart <span class="badge" id="cartCount">0</span></button>
+</div>
+</header>
+
+<main>
+<nav class="categories">
+<div class="category" onclick="selectCategory('सभी')"><div class="category-icon">🛍️</div>Sabhi</div>
+<div class="category" onclick="selectCategory('मोबाइल')"><div class="category-icon">📱</div>Mobile</div>
+<div class="category" onclick="selectCategory('फैशन')"><div class="category-icon">👕</div>Fashion</div>
+<div class="category" onclick="selectCategory('किराना')"><div class="category-icon">🥫</div>Grocery</div>
+<div class="category" onclick="selectCategory('घर')"><div class="category-icon">🏠</div>Home</div>
+<div class="category" onclick="selectCategory('ब्यूटी')"><div class="category-icon">🧴</div>Beauty</div>
+<div class="category" onclick="selectCategory('खिलौने')"><div class="category-icon">🧸</div>Toys</div>
+</nav>
+
+<section class="hero">
+<div class="hero-content">
+<span>✨ BHARATMART SPECIAL</span>
+<h1>Shopping ab<br>hogi super easy!</h1>
+<p>Apni pasand ke products chunein aur ghar baithe order karein.</p>
+<button class="primary" onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+</div>
+<div class="hero-art">🛍️</div>
+</section>
+
+<section class="section">
+<div class="section-title"><h2>Shop by Category</h2></div>
+<div class="category-buttons" id="categories"></div>
+</section>
+
+<section class="section" id="productsSection">
+<div class="section-title"><h2 id="productHeading">Recommended for You</h2><span id="productCount"></span></div>
+<div class="product-grid" id="productGrid"></div>
+<div class="empty hidden" id="emptyProducts">Koi product nahi mila.</div>
+</section>
+
+<section class="panel hidden" id="accountPanel">
+<h2>👤 Account</h2>
+<div id="accountInfo"></div>
+<div id="authForm">
+<div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" placeholder="Email address"></div>
+<div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters"></div>
+<button class="primary" onclick="login()">Login</button>
+<button class="secondary" onclick="signup()">Sign Up</button>
+<button class="secondary" onclick="resetPassword()">Forgot Password</button>
+</div>
+<div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap">
+<button class="secondary hidden" id="myOrdersButton" onclick="showMyOrders()">My Orders</button>
+<button class="primary hidden" id="adminButton" onclick="openAdmin()">Admin Panel</button>
+<button class="danger hidden" id="logoutButton" onclick="logout()">Logout</button>
+</div>
+</section>
+
+<section class="panel hidden" id="cartPanel">
+<h2>🛒 Your Cart</h2>
+<div id="cartItems"></div>
+<h3 id="cartTotal">Total: ₹0</h3>
+<h3>Delivery Details</h3>
+<div class="field"><label>Full Name</label><input id="customerName" autocomplete="name" placeholder="Aapka naam"></div>
+<div class="field"><label>Mobile Number</label><input id="customerPhone" type="tel" maxlength="10" inputmode="numeric" placeholder="10 digit number"></div>
+<div class="field"><label>PIN code (optional)</label><input id="customerPin" maxlength="6" inputmode="numeric" placeholder="PIN code"></div>
+<div class="field"><label>Delivery Address</label><textarea id="customerAddress" autocomplete="street-address" placeholder="House, street, city, state"></textarea></div>
+<div class="notice">Payment: Cash on Delivery. Online payment abhi enabled nahi hai.</div>
+<button class="primary" onclick="placeOrder()">Place COD Order</button>
+</section>
+
+<section class="panel hidden" id="wishlistPanel">
+<h2>❤️ Your Wishlist</h2><div id="wishlistItems" class="product-grid"></div>
+</section>
+
+<section class="panel hidden" id="ordersPanel">
+<h2>📦 My Orders</h2><div id="myOrders"></div>
+</section>
+
+<section class="panel hidden" id="adminPanel">
+<h2>🛠️ Admin Dashboard</h2>
+<div class="notice">Apne Admin UID ko code mein set karein aur Firestore Rules mein bhi admin access secure karein.</div>
+<input id="editProductId" type="hidden">
+<div class="field"><label>Product Name</label><input id="pName" placeholder="Product name"></div>
+<div class="field"><label>Price (₹)</label><input id="pPrice" type="number" min="0" placeholder="Price"></div>
+<div class="field"><label>Category</label><select id="pCategory"></select></div>
+<div class="field"><label>Image URL (optional)</label><input id="pImage" type="url" placeholder="https://..."></div>
+<div class="field"><label>Description</label><textarea id="pDescription" placeholder="Product details"></textarea></div>
+<button class="primary" onclick="saveProduct()">Save Product</button>
+<button class="secondary" onclick="clearProductForm()">Clear</button>
+<h3>All Products</h3><div id="adminProducts"></div>
+<h3>All Orders</h3><div id="adminOrders"></div>
+</section>
+</main>
+
+<footer>
+<h2>BharatMart 🇮🇳</h2>
+<p>Shopping ka smart adda!</p>
+<small>© <span id="year"></span> BharatMart</small>
+</footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA4qAhS3ag3CpsPJrwnMxpCSuPtQ-5cBbk",
+  authDomain: "bharatmart-26a2f.firebaseapp.com",
+  projectId: "bharatmart-26a2f",
+  storageBucket: "bharatmart-26a2f.firebasestorage.app",
+  messagingSenderId: "858559088379",
+  appId: "1:858559088379:web:66ee91a3b6a2f97659d25e"
+};
+
+// IMPORTANT: yahan apne Firebase Admin account ka UID paste karein.
+const ADMIN_UID = "PASTE_ADMIN_UID_HERE";
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser = null;
+let products = [];
+let activeCategory = "सभी";
+let toastTimer;
+
+function getLocal(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return Array.isArray(value) ? value : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+let cart = getLocal("bm_cart", []);
+let wishlist = getLocal("bm_wishlist", []);
+
+const categories = [
+  "सभी","मोबाइल","फैशन","किराना","घर","ब्यूटी","खिलौने","स्पोर्ट्स","अन्य"
+];
+
+const demoProducts = [
+ {id:"demo1",name:"Wireless Headphones",price:899,oldPrice:1299,category:"मोबाइल",emoji:"🎧",description:"Music aur calls ke liye"},
+ {id:"demo2",name:"Smart Watch",price:1199,oldPrice:1799,category:"मोबाइल",emoji:"⌚",description:"Smart everyday style"},
+ {id:"demo3",name:"Casual Sneakers",price:999,oldPrice:1499,category:"फैशन",emoji:"👟",description:"Comfortable daily wear"},
+ {id:"demo4",name:"Cotton T-Shirt",price:399,oldPrice:599,category:"फैशन",emoji:"👕",description:"Soft cotton feel"},
+ {id:"demo5",name:"Basmati Rice",price:120,oldPrice:150,category:"किराना",emoji:"🍚",description:"Kitchen essential"},
+ {id:"demo6",name:"Skincare Lotion",price:249,oldPrice:329,category:"ब्यूटी",emoji:"🧴",description:"Daily care routine"},
+ {id:"demo7",name:"Building Blocks",price:499,oldPrice:699,category:"खिलौने",emoji:"🧸",description:"Fun play time"},
+ {id:"demo8",name:"Cricket Bat",price:799,oldPrice:999,category:"स्पोर्ट्स",emoji:"🏏",description:"Weekend sports fun"},
+ {id:"demo9",name:"Decorative Plant",price:299,oldPrice:399,category:"घर",emoji:"🪴",description:"Freshen up your room"}
+];
+
+const $ = id => document.getElementById(id);
+
+function money(n) {
+  return "₹" + Number(n || 0).toLocaleString("en-IN");
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[ch]));
+}
+
+function notify(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+}
+
+function isAdmin() {
+  return !!currentUser &&
+    ADMIN_UID !== "PASTE_ADMIN_UID_HERE" &&
+    currentUser.uid === ADMIN_UID;
+}
+
+function hidePanels() {
+  ["accountPanel","cartPanel","wishlistPanel","ordersPanel","adminPanel"]
+    .forEach(id => $(id).classList.add("hidden"));
+}
+
+function openPanel(id) {
+  hidePanels();
+  $(id).classList.remove("hidden");
+  $(id).scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function openAccount() {
+  openPanel("accountPanel");
+}
+
+function drawCategories() {
+  $("categories").innerHTML = categories.map(c =>
+    `<button class="chip ${c===activeCategory?"active":""}"
+      onclick="selectCategory('${esc(c)}')">${esc(c)}</button>`
+  ).join("");
+
+  $("pCategory").innerHTML = categories.filter(c => c !== "सभी")
+    .map(c => `<option>${esc(c)}</option>`).join("");
+}
+
+function selectCategory(category) {
+  activeCategory = category;
+  drawCategories();
+  renderProducts();
+  $("productsSection").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function productCard(p, index=0) {
+  const liked = wishlist.includes(p.id);
+  const discount = p.oldPrice && Number(p.oldPrice) > Number(p.price)
+    ? Math.round((1 - Number(p.price)/Number(p.oldPrice))*100) : 0;
+
+  const image = p.image
+    ? `<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}"
+         onerror="this.parentElement.textContent='🛍️'">`
+    : esc(p.emoji || "🛍️");
+
+  return `<article class="product" style="animation-delay:${Math.min(index,10)*30}ms">
+    <div class="product-image">${image}</div>
+    <div class="product-info">
+      <div style="font-size:11px;color:#667085">${esc(p.category||"अन्य")}</div>
+      <h3>${esc(p.name)}</h3>
+      <div style="font-size:12px;color:#667085">${esc(p.description||"Quality product")}</div>
+      <div class="price">${money(p.price)}
+        ${p.oldPrice?`<span class="old-price">${money(p.oldPrice)}</span>`:""}
+      </div>
+      <div class="discount">${discount?discount+"% off":"BharatMart pick"}</div>
+      <div class="product-actions">
+        <button class="primary" onclick="addToCart('${esc(p.id)}')">🛒 Add</button>
+        <button class="heart" onclick="toggleWishlist('${esc(p.id)}')">${liked?"♥":"♡"}</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderProducts() {
+  const query = $("searchInput").value.trim().toLowerCase();
+
+  const list = products.filter(p =>
+    (activeCategory==="सभी" || p.category===activeCategory) &&
+    [p.name,p.category,p.description].some(v =>
+      String(v||"").toLowerCase().includes(query))
+  );
+
+  $("productGrid").innerHTML = list.map(productCard).join("");
+  $("productCount").textContent = list.length + " products";
+  $("emptyProducts").classList.toggle("hidden", list.length > 0);
+  $("productHeading").textContent =
+    activeCategory==="सभी" ? "Recommended for You" : activeCategory;
+}
+
+async function loadProducts() {
+  try {
+    const snap = await db.collection("products").get();
+    const live = snap.docs.map(doc => ({id:doc.id,...doc.data()}));
+    products = live.length ? live : demoProducts;
+  } catch(error) {
+    console.error(error);
+    products = demoProducts;
+  }
+
+  drawCategories();
+  renderProducts();
+
+  if (isAdmin()) renderAdminProducts();
+}
+
+function saveCart() {
+  localStorage.setItem("bm_cart", JSON.stringify(cart));
+  $("cartCount").textContent = cart.reduce((n,item)=>n+Number(item.qty||0),0);
+}
+
+function addToCart(id) {
+  const p = products.find(item => item.id === id);
+  if (!p) return notify("Product nahi mila.");
+
+  if (String(id).startsWith("demo")) {
+    return notify("Yeh demo item hai. Order ke liye Admin ko real product add karna hoga.");
+  }
+
+  const item = cart.find(x => x.id === id);
+  if (item) item.qty++;
+  else cart.push({
+    id:p.id,name:p.name,price:Number(p.price),qty:1
+  });
+
+  saveCart();
+  notify("Cart mein add ho gaya!");
+}
+
+function cartTotal() {
+  return cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.qty),0);
+}
+
+function renderCart() {
+  $("cartItems").innerHTML = cart.length ? cart.map(item => `
+    <div class="row">
+      <b>${esc(item.name)}</b> — ${money(item.price)}
+      <div style="margin-top:8px">
+        <button class="secondary" onclick="changeQty('${esc(item.id)}',-1)">−</button>
+        <b>${item.qty}</b>
+        <button class="secondary" onclick="changeQty('${esc(item.id)}',1)">+</button>
+        <button class="danger" onclick="removeCart('${esc(item.id)}')">Remove</button>
+      </div>
+    </div>`).join("")
+    : `<div class="empty">Cart khaali hai. Shopping shuru karein 🛍️</div>`;
+
+  $("cartTotal").textContent = "Total: " + money(cartTotal());
+}
+
+function showCart() {
+  renderCart();
+  openPanel("cartPanel");
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+
+  item.qty += delta;
+  if (item.qty < 1) cart = cart.filter(x => x.id !== id);
+
+  saveCart();
+  renderCart();
+}
+
+function removeCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  saveCart();
+  renderCart();
+}
+
+function toggleWishlist(id) {
+  if (wishlist.includes(id)) wishlist = wishlist.filter(x => x !== id);
+  else wishlist.push(id);
+
+  localStorage.setItem("bm_wishlist", JSON.stringify(wishlist));
+  renderProducts();
+  notify(wishlist.includes(id) ? "Wishlist mein add ho gaya" : "Wishlist se hata diya");
+}
+
+function showWishlist() {
+  $("wishlistItems").innerHTML = products
+    .filter(p => wishlist.includes(p.id))
+    .map(productCard).join("") || `<div class="empty">Wishlist khaali hai ❤️</div>`;
+
+  openPanel("wishlistPanel");
+}
+
+async function signup() {
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if (!email || password.length < 6) {
+    return notify("Valid email aur kam se kam 6-character password bharein.");
+  }
+
+  try {
+    await auth.createUserWithEmailAndPassword(email,password);
+    notify("Account ban gaya!");
+  } catch(error) {
+    notify("Signup failed: " + error.message);
+  }
+}
+
+async function login() {
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if (!email || !password) return notify("Email aur password bharein.");
+
+  try {
+    await auth.signInWithEmailAndPassword(email,password);
+    notify("Login successful!");
+  } catch(error) {
+    notify("Login failed: " + error.message);
+  }
+}
+
+async function resetPassword() {
+  const email = $("email").value.trim();
+  if (!email) return notify("Pehle email field mein email likhein.");
+
+  try {
+    await auth.sendPasswordResetEmail(email);
+    notify("Password reset email bhej diya gaya.");
+  } catch(error) {
+    notify(error.message);
+  }
+}
+
+async function logout() {
+  try {
+    await auth.signOut();
+    notify("Logout successful");
+  } catch(error) {
+    notify(error.message);
+  }
+}
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+
+  $("authForm").classList.toggle("hidden",!!user);
+  $("logoutButton").classList.toggle("hidden",!user);
+  $("myOrdersButton").classList.toggle("hidden",!user);
+  $("adminButton").classList.toggle("hidden",!isAdmin());
+
+  $("accountInfo").innerHTML = user
+    ? `<div class="notice">Logged in: <b>${esc(user.email||"")}</b><br>
+       UID: <code>${esc(user.uid)}</code></div>`
+    : "";
+
+  if (isAdmin()) {
+    loadAdminOrders();
+    renderAdminProducts();
+  }
+});
+
+async function placeOrder() {
+  if (!currentUser) return notify("Order ke liye pehle login karein.");
+  if (!cart.length) return notify("Cart khaali hai.");
+
+  const name = $("customerName").value.trim();
+  const phone = $("customerPhone").value.trim();
+  const address = $("customerAddress").value.trim();
+  const pinCode = $("customerPin").value.trim();
+
+  if (name.length < 2) return notify("Apna naam bharein.");
+  if (!/^[6-9][0-9]{9}$/.test(phone)) return notify("Sahi 10 digit mobile number daalein.");
+  if (address.length < 8) return notify("Poora delivery address bharein.");
+  if (cart.some(x => String(x.id).startsWith("demo"))) {
+    return notify("Demo products ko order nahi kar sakte.");
+  }
+
+  const items = cart.map(item => ({
+    productId:item.id,
+    name:item.name,
+    price:Number(item.price),
+    quantity:Number(item.qty)
+  }));
+
+  try {
+    const ref = await db.collection("orders").add({
+      userId:currentUser.uid,
+      customerName:name,
+      phone,
+      address,
+      pinCode,
+      items,
+      total:cartTotal(),
+      paymentMethod:"COD",
+      paymentStatus:"Pending",
+      status:"नया",
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    const total = cartTotal();
+    cart = [];
+    saveCart();
+    renderCart();
+
+    alert("Order place ho gaya!\nOrder ID: " + ref.id + "\nTotal: " + money(total));
+    showMyOrders();
+  } catch(error) {
+    notify("Order save nahi hua: " + error.message);
+  }
+}
+
+async function showMyOrders() {
+  if (!currentUser) return notify("Pehle login karein.");
+
+  openPanel("ordersPanel");
+  $("myOrders").textContent = "Orders loading...";
+
+  try {
+    const snap = await db.collection("orders")
+      .where("userId","==",currentUser.uid).get();
+
+    const list = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+
+    $("myOrders").innerHTML = list.length ? list.map(o=>`
+      <div class="row">
+        <b>Order ID:</b> ${esc(o.id)}
+        <p>Total: ${money(o.total)}</p>
+        <p>Status: <b>${esc(o.status||"नया")}</b></p>
+        <p>Payment: ${esc(o.paymentMethod||"COD")}</p>
+      </div>`).join("")
+      : `<div class="empty">Abhi koi order nahi hai.</div>`;
+  } catch(error) {
+    $("myOrders").textContent = "Orders load nahi hue: " + error.message;
+  }
+}
+
+function openAdmin() {
+  if (!isAdmin()) return notify("Admin access nahi hai.");
+
+  openPanel("adminPanel");
+  renderAdminProducts();
+  loadAdminOrders();
+}
+
+async function saveProduct() {
+  if (!isAdmin()) return notify("Admin permission nahi hai.");
+
+  const id = $("editProductId").value;
+  const name = $("pName").value.trim();
+  const price = Number($("pPrice").value);
+  const category = $("pCategory").value;
+  const image = $("pImage").value.trim();
+  const description = $("pDescription").value.trim();
+
+  if (name.length < 2 || !Number.isFinite(price) || price < 0) {
+    return notify("Product name aur sahi price bharein.");
+  }
+
+  if (image && !/^https:\/\//i.test(image)) {
+    return notify("Image URL https:// se shuru hona chahiye.");
+  }
+
+  const data = {
+    name,price,category,image,description,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    if (id) {
+      await db.collection("products").doc(id).update(data);
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection("products").add(data);
+    }
+
+    clearProductForm();
+    await loadProducts();
+    renderAdminProducts();
+    notify(id ? "Product update ho gaya" : "Product add ho gaya");
+  } catch(error) {
+    notify("Save failed: " + error.message);
+  }
+}
+
+function clearProductForm() {
+  ["editProductId","pName","pPrice","pImage","pDescription"]
+    .forEach(id => $(id).value = "");
+}
+
+function renderAdminProducts() {
+  if (!isAdmin()) return;
+
+  $("adminProducts").innerHTML = products
+    .filter(p => !String(p.id).startsWith("demo"))
+    .map(p=>`
+      <div class="row">
+        <b>${esc(p.name)}</b> — ${money(p.price)}
+        <p>${esc(p.category||"अन्य")}</p>
+        <button class="secondary" onclick="editProduct('${esc(p.id)}')">Edit</button>
+        <button class="danger" onclick="deleteProduct('${esc(p.id)}')">Delete</button>
+      </div>`).join("") || "<p>Abhi koi real product nahi hai.</p>";
+}
+
+function editProduct(id) {
+  const p = products.find(x=>x.id===id);
+  if (!p || !isAdmin()) return;
+
+  $("editProductId").value = p.id;
+  $("pName").value = p.name || "";
+  $("pPrice").value = p.price ?? "";
+  $("pCategory").value = p.category || "अन्य";
+  $("pImage").value = p.image || "";
+  $("pDescription").value = p.description || "";
+  $("adminPanel").scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteProduct(id) {
+  if (!isAdmin() || !confirm("Kya is product ko delete karna hai?")) return;
+
+  try {
+    await db.collection("products").doc(id).delete();
+    await loadProducts();
+    renderAdminProducts();
+    notify("Product delete ho gaya");
+  } catch(error) {
+    notify("Delete failed: " + error.message);
+  }
+}
+
+async function loadAdminOrders() {
+  if (!isAdmin()) return;
+
+  $("adminOrders").textContent = "Orders loading...";
+
+  try {
+    const snap = await db.collection("orders").get();
+    const list = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+
+    const statuses = ["नया","स्वीकार किया","तैयार हो रहा है","भेज दिया","डिलीवर हो गया","रद्द"];
+
+    $("adminOrders").innerHTML = list.length ? list.map(o=>`
+      <div class="row">
+        <b>Order:</b> ${esc(o.id)}
+        <p>Customer: ${esc(o.customerName||"")} | Phone: ${esc(o.phone||"")}</p>
+        <p>Address: ${esc(o.address||"")} ${esc(o.pinCode||"")}</p>
+        <p>Total: ${money(o.total)}</p>
+        <label>Status</label>
+        <select id="status_${esc(o.id)}">
+          ${statuses.map(s=>`<option ${o.status===s?"selected":""}>${s}</option>`).join("")}
+        </select>
+        <button class="primary" style="margin-top:8px" onclick="updateOrderStatus('${esc(o.id)}')">Update Status</button>
+      </div>`).join("") : "<p>Abhi koi order nahi hai.</p>";
+  } catch(error) {
+    $("adminOrders").textContent = "Orders load nahi hue: " + error.message;
+  }
+}
+
+async function updateOrderStatus(id) {
+  if (!isAdmin()) return;
+
+  try {
+    await db.collection("orders").doc(id).update({
+      status:$("status_"+id).value,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    notify("Order status update ho gaya");
+    await loadAdminOrders();
+  } catch(error) {
+    notify("Update failed: " + error.message);
+  }
+}
+
+$("searchInput").addEventListener("input",renderProducts);
+$("year").textContent = new Date().getFullYear();
+
+drawCategories();
+saveCart();
+loadProducts();
+</script>
+</body>
+  </html>
