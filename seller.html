@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BharatMart Seller Panel</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f3f6;color:#222}
+header{background:#1558c0;color:white;padding:16px;font-size:22px;font-weight:bold}
+.container{max-width:650px;margin:20px auto;padding:15px}
+.card{background:white;padding:20px;border-radius:10px;margin-bottom:15px;box-shadow:0 2px 8px #ddd}
+input,textarea,select,button{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:5px;font-size:15px}
+button{background:#1558c0;color:white;border:none;font-weight:bold;cursor:pointer}
+.secondary{background:#ffcc00;color:#222}
+h2{margin-top:0}
+#dashboard{display:none}
+.status{padding:10px;background:#fff3cd;border-radius:5px}
+</style>
+</head>
+
+<body>
+<header>🛍️ BharatMart Seller</header>
+
+<div class="container">
+
+<div class="card" id="authBox">
+<h2>Seller Login / Registration</h2>
+<input id="name" placeholder="आपका नाम (नए Seller के लिए)">
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="registerSeller()">नया Seller अकाउंट बनाएँ</button>
+<button class="secondary" onclick="loginSeller()">Login करें</button>
+<p id="message"></p>
+</div>
+
+<div id="dashboard">
+<div class="card">
+<h2>Seller Dashboard</h2>
+<p id="sellerInfo"></p>
+<p class="status" id="approvalStatus">Approval Status: जाँच हो रही है...</p>
+<button onclick="logoutSeller()">Logout</button>
+</div>
+
+<div class="card" id="productBox">
+<h2>नया Product जोड़ें</h2>
+<input id="productName" placeholder="Product का नाम">
+<select id="category">
+<option value="">Category चुनें</option>
+<option>Electronics</option>
+<option>Fashion</option>
+<option>Home</option>
+<option>Beauty</option>
+<option>Grocery</option>
+<option>Other</option>
+</select>
+<textarea id="description" placeholder="Product की जानकारी"></textarea>
+<input id="price" type="number" min="1" placeholder="Selling Price ₹">
+<input id="mrp" type="number" min="1" placeholder="MRP ₹">
+<input id="stock" type="number" min="0" placeholder="Stock">
+<input id="imageUrl" type="url" placeholder="Product Image URL">
+<button onclick="addProduct()">Product Approval के लिए भेजें</button>
+<p id="productMessage"></p>
+</div>
+
+<div class="card">
+<h2>मेरे Products</h2>
+<div id="myProducts">Products लोड हो रहे हैं...</div>
+</div>
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+// अपनी मौजूदा index.html में मौजूद Firebase config यहाँ डालें।
+const firebaseConfig = {
+  apiKey: "AIzaSyA4qAhS3ag3CpsPJrwnMxpCSuPtQ-5cBbk",
+  authDomain: "bharatmart-26a2f.firebaseapp.com",
+  projectId: "bharatmart-26a2f",
+  storageBucket: "bharatmart-26a2f.firebasestorage.app",
+  messagingSenderId: "858559088379",
+  appId: "1:858559088379:web:66ee91a3b6a2f97659d25e"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let sellerApproved = false;
+
+function showMessage(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+async function registerSeller() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!name || !email || password.length < 6) {
+    showMessage("message", "नाम और Email भरें। Password कम से कम 6 अक्षर का हो।");
+    return;
+  }
+
+  try {
+    const result = await auth.createUserWithEmailAndPassword(email, password);
+    await db.collection("sellers").doc(result.user.uid).set({
+      uid: result.user.uid,
+      name: name,
+      email: email,
+      status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    showMessage("message", "अकाउंट बन गया। Admin की मंज़ूरी का इंतज़ार करें।");
+  } catch (error) {
+    showMessage("message", "त्रुटि: " + error.message);
+  }
+}
+
+async function loginSeller() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    showMessage("message", "Login नहीं हुआ: " + error.message);
+  }
+}
+
+async function loadSeller(user) {
+  document.getElementById("authBox").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("sellerInfo").textContent = "Email: " + user.email;
+
+  try {
+    const doc = await db.collection("sellers").doc(user.uid).get();
+
+    if (!doc.exists) {
+      sellerApproved = false;
+      showMessage("approvalStatus", "Seller प्रोफ़ाइल नहीं मिली। पहले Seller Registration करें।");
+      document.getElementById("productBox").style.display = "none";
+      return;
+    }
+
+    const seller = doc.data();
+    sellerApproved = seller.status === "approved";
+
+    showMessage(
+      "approvalStatus",
+      sellerApproved
+        ? "आपका Seller अकाउंट Approved है। आप Products जोड़ सकते हैं।"
+        : "आपका Seller अकाउंट अभी Pending है। Admin की मंज़ूरी के बाद Products जोड़ सकेंगे।"
+    );
+
+    document.getElementById("productBox").style.display = sellerApproved ? "block" : "none";
+    await loadMyProducts(user.uid);
+  } catch (error) {
+    showMessage("approvalStatus", "डेटा लोड नहीं हुआ: " + error.message);
+  }
+}
+
+async function addProduct() {
+  const user = auth.currentUser;
+  if (!user || !sellerApproved) {
+    showMessage("productMessage", "पहले Seller Approval ज़रूरी है।");
+    return;
+  }
+
+  const name = document.getElementById("productName").value.trim();
+  const category = document.getElementById("category").value;
+  const description = document.getElementById("description").value.trim();
+  const price = Number(document.getElementById("price").value);
+  const mrp = Number(document.getElementById("mrp").value);
+  const stock = Number(document.getElementById("stock").value);
+  const imageUrl = document.getElementById("imageUrl").value.trim();
+
+  if (!name || !category || !description || price <= 0 || mrp < price || stock < 0) {
+    showMessage("productMessage", "सभी जानकारी सही भरें। MRP, Selling Price से कम नहीं होनी चाहिए।");
+    return;
+  }
+
+  try {
+    await db.collection("products").add({
+      name,
+      category,
+      description,
+      price,
+      mrp,
+      stock,
+      imageUrl,
+      sellerId: user.uid,
+      sellerEmail: user.email,
+      status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    showMessage("productMessage", "Product Admin के पास Approval के लिए भेज दिया गया है।");
+    await loadMyProducts(user.uid);
+  } catch (error) {
+    showMessage("productMessage", "Save नहीं हुआ: " + error.message);
+  }
+}
+
+async function loadMyProducts(uid) {
+  const box = document.getElementById("myProducts");
+  box.textContent = "Products लोड हो रहे हैं...";
+
+  try {
+    const snap = await db.collection("products")
+      .where("sellerId", "==", uid)
+      .get();
+
+    box.innerHTML = "";
+
+    if (snap.empty) {
+      box.textContent = "अभी कोई Product नहीं है।";
+      return;
+    }
+
+    snap.forEach(doc => {
+      const p = doc.data();
+      const item = document.createElement("div");
+      item.className = "card";
+
+      const title = document.createElement("strong");
+      title.textContent = p.name || "Product";
+
+      const details = document.createElement("p");
+      details.textContent = "कीमत: ₹" + p.price + " | Status: " + (p.status || "pending");
+
+      item.appendChild(title);
+      item.appendChild(details);
+      box.appendChild(item);
+    });
+  } catch (error) {
+    box.textContent = "Products लोड नहीं हुए: " + error.message;
+  }
+}
+
+function logoutSeller() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    loadSeller(user);
+  } else {
+    document.getElementById("authBox").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
+  }
+});
+</script>
+</body>
+</html>
