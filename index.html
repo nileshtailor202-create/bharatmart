@@ -58,9 +58,20 @@ main{max-width:1100px;margin:auto;padding:12px}.view{display:none}.view.active{d
  <button class="menu-item" data-action="returns"><span class="mi">↩️</span><span><strong>रिटर्न और रिफंड</strong><small>ऑर्डर सहायता जानकारी</small></span><span class="arrow">›</span></button>
  <button class="menu-item" data-action="admin"><span class="mi">🔐</span><span><strong>Admin Panel</strong><small>केवल एडमिन अकाउंट के लिए</small></span><span class="arrow">›</span></button>
  <button class="menu-item" data-action="logout"><span class="mi">🚪</span><span><strong>लॉगआउट</strong><small>अपने अकाउंट से बाहर निकलें</small></span><span class="arrow">›</span></button>
- </div></section>
-<section class="view" id="inviteView"><div class="invitebox"><div class="gift">🎁</div><h2>दोस्तों को BharatMart पर बुलाएँ</h2><p>अपने दोस्तों और परिवार के साथ BharatMart शेयर करें। रेफरल रिवॉर्ड सुविधा अभी चालू नहीं है; यह शेयर करने का विकल्प है।</p><button class="btn blue" id="shareBtn">📲 Invite शेयर करें</button><button class="btn light" id="copyBtn" style="margin-left:5px">🔗 लिंक कॉपी करें</button><p id="inviteStatus"></p></div><div class="panel"><strong>कैसे काम करता है?</strong><p style="font-size:13px;color:var(--muted);line-height:1.6">शेयर बटन से ऐप का लिंक भेजें। भविष्य में वास्तविक रेफरल और रिवॉर्ड ट्रैकिंग अलग से जोड़ी जा सकती है।</p></div></section>
-<section class="view" id="adminView"><div class="sectiontitle"><h2>🔐 Admin Panel</h2></div><div id="adminGate" class="notice">Admin Panel देखने के लिए अपने Admin अकाउंट से लॉगिन करें।</div><div id="adminContent" class="hidden"><div class="panel"><h3>नया प्रोडक्ट जोड़ें</h3><form class="form" id="addProductForm"><div><label>प्रोडक्ट का नाम</label><input id="apName" required maxlength="80"></div><div class="twocol"><div><label>कीमत (₹)</label><input id="apPrice" type="number" min="1" required></div><div><label>पुरानी कीमत (₹)</label><input id="apOldPrice" type="number" min="0"></div></div><div class="twocol"><div><label>कैटेगरी</label><select id="apCategory"><option>मोबाइल</option><option>इलेक्ट्रॉनिक्स</option><option>फैशन</option><option>घर और किचन</option><option>ब्यूटी</option><option>Grocery</option><option>अन्य</option></select></div><div><label>इमोजी आइकन</label><select id="apEmoji"><option>📱</option><option>🎧</option><option>🔊</option><option>👕</option><option>👟</option><option>👜</option><option>🏠</option><option>🥦</option><option>🍎</option><option>✨</option><option>🎁</option></select></div></div><button class="btn blue">प्रोडक्ट जोड़ें</button></form></div><div class="panel"><h3>प्रोडक्ट प्रबंधन</h3><div id="adminProducts"></div></div><div class="panel"><h3>ऑर्डर प्रबंधन</h3><div id="adminOrders"></div></div></div></section>
+  <div class="panel">
+  <h3>🏪 Seller Approval</h3>
+  <div id="adminSellers">Sellers लोड हो रहे हैं...</div>
+</div>
+
+<div class="panel">
+  <h3>प्रोडक्ट प्रबंधन</h3>
+  <div id="adminProducts"></div>
+</div>
+
+<div class="panel">
+  <h3>ऑर्डर प्रबंधन</h3>
+  <div id="adminOrders"></div>
+</div>
 </main>
 <nav class="bottomnav"><button class="navbtn active" data-view="homeView"><span class="ni">🏠</span>होम</button><button class="navbtn" data-view="categoriesView"><span class="ni">▦</span>कैटेगरी</button><button class="navbtn" data-view="profileView"><span class="ni">👤</span>प्रोफाइल</button><button class="navbtn" data-view="inviteView"><span class="ni">🎁</span>Invite</button></nav>
 <div id="toast" class="toast"></div><div id="modalBack" class="modalback"><div class="modal"><div class="modalhead"><h2 id="modalTitle">BharatMart</h2><button class="close" id="modalClose">×</button></div><div id="modalContent"></div></div></div>
