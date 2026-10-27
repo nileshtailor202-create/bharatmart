@@ -126,5 +126,8 @@ try{firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.fire
 updateCounts();renderAll();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(e=>console.log("SW",e)));
 </script>
+ <button onclick="location.href='seller.html'" style="position:fixed;bottom:75px;right:15px;background:#1558c0;color:white;border:0;padding:13px 18px;border-radius:8px;font-weight:bold;z-index:9999">
+  🏪 Seller Panel
+ </button>
 </body></html>
-</body>
+
