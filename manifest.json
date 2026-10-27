@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "BharatMart Online Shopping",
+  "short_name": "BharatMart",
+  "description": "BharatMart online shopping PWA",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1f3f6",
+  "theme_color": "#2874f0",
+  "orientation": "portrait",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
+  ]
+}
